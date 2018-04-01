@@ -6,13 +6,47 @@
 
 ## Catalog Description
 
+Fundamentals of detailed design and architectural refinement using model consistency, traceability, architectural patterns, and model driven development. Integration with exisiting systems. Architecture and design recovery.
+
 ## Course Learning Objectives
 
 ## Reading Materials
 
+Most materials for this class will be provided by the instructor. I may recommend texts during
+the quarter that you might find interesting for background material and for general "keeping
+on the shelf" help.
+
+We will use the following book starting in the second or third week. I will assign one or more
+chapters as homework and will expect a single page summary of what was discussed. We will discuss
+the materials in class so be prepared. You are free to purchase this on the used market or in
+the Kindle edition (it's a lot less expensive that way).
+
+[**The Design of Design: Essays from a Computer Scientist**](https://www.amazon.com/Design-Essays-Computer-Scientist/dp/0201362988)<br/>
+Frederick P. Brooks Jr. <br/>
+ISBN-13: 978-0201362985<br/>
+ISBN-10: 0201362988<br/>
+
 ## Important Dates
 
+04/03 - First class
+04/17 - Guest lecture (I'm out)
+05/08 - Mid-term
+06/05 - Design papers and presentations
+06/13 - Final exam
+
 ## Tentative list of topics / schedule
+
+04/03 Introduction
+04/10 Design patterns
+04/17 Stephen: Open Topic
+04/24 Distributed computing and API design
+05/01 Agile software architecture
+05/08 Mid-term, Pragmatic programming
+05/15 TNG breakdown (design studio class)
+05/22 What is architecture
+05/29 Anti-patterns and Topics in Software Architecture
+06/05 Design papers due
+06/13 Final exam due
 
 ## Grading
 
@@ -27,7 +61,7 @@ This is a tentative break-down, I'll adjust during the first week of class based
 * Mid-term exam 20%
 * Final exam 30%
 * Team project 25%
-* Individual assignments 15%
+* Brooks papers (5 @ 3% each) 15%
 * Classroom participation 10%
 
 Software engineering is a team process and one of the most important parts of that is communication. This includes both written and verbal. As such, the exams will be essay format (to include requirements artifacts as necessary). I also expect full classroom participation in discussions. Feel free to voice your opinions and disagree with what you're learning. That's part of the process. But do so in a respectful manner.
