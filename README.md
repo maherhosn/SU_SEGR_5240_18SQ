@@ -29,25 +29,25 @@ ISBN-10: 0201362988<br/>
 
 ## Important Dates
 
-04/03 - First class
-04/17 - Guest lecture (I'm out)
-05/08 - Mid-term
-06/05 - Design papers and presentations
-06/13 - Final exam
+* 04/03 - First class
+* 04/17 - Guest lecture (I'm out)
+* 05/08 - Mid-term
+* 06/05 - Design papers and presentations
+* 06/13 - Final exam
 
 ## Tentative list of topics / schedule
 
-04/03 Introduction
-04/10 Design patterns
-04/17 Stephen: Open Topic
-04/24 Distributed computing and API design
-05/01 Agile software architecture
-05/08 Mid-term, Pragmatic programming
-05/15 TNG breakdown (design studio class)
-05/22 What is architecture
-05/29 Anti-patterns and Topics in Software Architecture
-06/05 Design papers due
-06/13 Final exam due
+* 04/03 Introduction
+* 04/10 Design patterns
+* 04/17 Stephen: Open Topic
+* 04/24 Distributed computing and API design
+* 05/01 Agile software architecture
+* 05/08 Mid-term, Pragmatic programming
+* 05/15 TNG breakdown (design studio class)
+* 05/22 What is architecture
+* 05/29 Anti-patterns and Topics in Software Architecture
+* 06/05 Design papers due
+* 06/13 Final exam due
 
 ## Grading
 
