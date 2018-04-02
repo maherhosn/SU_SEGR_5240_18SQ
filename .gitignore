@@ -1,3 +1,6 @@
 .DS_Store
 Grades.xlsx
 finals/
+restapi/obj
+restapi/bin
+
