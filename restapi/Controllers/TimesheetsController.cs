@@ -11,12 +11,14 @@ namespace restapi.Controllers
     public class TimesheetsController : ControllerBase
     {
         [HttpGet]
+        [Produces(ContentTypes.Timesheets)]
         public IEnumerable<Timecard> GetAll()
         {
             return Database.All;
         }
 
         [HttpGet("{id}")]
+        [Produces(ContentTypes.Timesheet)]
         public IActionResult GetOne(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -32,6 +34,7 @@ namespace restapi.Controllers
         }
 
         [HttpPost]
+        [Produces(ContentTypes.Timesheet)]
         public Timecard Create([FromBody] DocumentResource resource)
         {
             var timecard = new Timecard()
@@ -54,6 +57,7 @@ namespace restapi.Controllers
         }
 
         [HttpGet("{id}/lines")]
+        [Produces(ContentTypes.TimesheetLines)]
         public IActionResult GetLines(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -69,6 +73,7 @@ namespace restapi.Controllers
         }
 
         [HttpPost("{id}/lines")]
+        [Produces(ContentTypes.TimesheetLine)]
         public IActionResult AddLine(string id, [FromBody] TimecardLine timecardLine)
         {
             Timecard timecard = Database.Find(id);
@@ -80,9 +85,11 @@ namespace restapi.Controllers
                     return StatusCode(409);
                 }
 
-                timecard.Lines.Add(new AnnotatedTimecardLine(timecardLine));
+                var annotatedLine = new AnnotatedTimecardLine(timecardLine);
 
-                return Ok(timecard.Lines);
+                timecard.Lines.Add(annotatedLine);
+
+                return Ok(annotatedLine);
             }
             else
             {
@@ -91,6 +98,7 @@ namespace restapi.Controllers
         }
         
         [HttpGet("{id}/transitions")]
+        [Produces(ContentTypes.Transitions)]
         public IActionResult GetTransitions(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -106,6 +114,7 @@ namespace restapi.Controllers
         }
 
         [HttpPost("{id}/submittal")]
+        [Produces(ContentTypes.Transition)]
         public IActionResult Submit(string id, [FromBody] Submittal submittal)
         {
             Timecard timecard = Database.Find(id);
@@ -128,6 +137,7 @@ namespace restapi.Controllers
         }
 
         [HttpGet("{id}/submittal")]
+        [Produces(ContentTypes.Transition)]
         public IActionResult GetSubmittal(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -155,6 +165,7 @@ namespace restapi.Controllers
         }
 
         [HttpPost("{id}/cancellation")]
+        [Produces(ContentTypes.Transition)]
         public IActionResult Cancel(string id, [FromBody] Cancellation cancellation)
         {
             Timecard timecard = Database.Find(id);
@@ -177,6 +188,7 @@ namespace restapi.Controllers
         }
 
         [HttpGet("{id}/cancellation")]
+        [Produces(ContentTypes.Transition)]
         public IActionResult GetCancellation(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -204,6 +216,7 @@ namespace restapi.Controllers
         }
 
         [HttpPost("{id}/rejection")]
+        [Produces(ContentTypes.Transition)]
         public IActionResult Close(string id, [FromBody] Rejection rejection)
         {
             Timecard timecard = Database.Find(id);
@@ -226,6 +239,7 @@ namespace restapi.Controllers
         }
 
         [HttpGet("{id}/rejection")]
+        [Produces(ContentTypes.Transition)]
         public IActionResult GetRejection(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -253,6 +267,7 @@ namespace restapi.Controllers
         }
         
         [HttpPost("{id}/approval")]
+        [Produces(ContentTypes.Transition)]
         public IActionResult Approve(string id, [FromBody] Approval approval)
         {
             Timecard timecard = Database.Find(id);
@@ -275,6 +290,7 @@ namespace restapi.Controllers
         }
 
         [HttpGet("{id}/approval")]
+        [Produces(ContentTypes.Transition)]
         public IActionResult GetApproval(string id)
         {
             Timecard timecard = Database.Find(id);

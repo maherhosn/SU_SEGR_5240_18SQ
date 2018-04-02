@@ -10,9 +10,13 @@ namespace restapi.Models
 
         public const string Timesheets = "application/com.my-company.my-product.timesheets+json";
 
-        public const string TimesheetLine = "application/com.my-company.my-product.timesheet-lines+json";
+        public const string TimesheetLine = "application/com.my-company.my-product.timesheet-line+json";
+
+        public const string TimesheetLines = "application/com.my-company.my-product.timesheet-lines+json";
     
         public const string Transitions = "application/com.my-company.my-product.timesheet-transitions+json";
+
+        public const string Transition = "application/com.my-company.my-product.timesheet-transition+json";
     
         public const string Error = "application/com.my-company.my-product.simple-error+json";
     }
