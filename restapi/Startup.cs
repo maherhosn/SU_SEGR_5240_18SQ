@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace restapi
 {
@@ -43,11 +44,37 @@ namespace restapi
                     o.SerializerSettings.DateParseHandling = DateParseHandling.DateTime;
                     o.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 });
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new Info
+                {
+                    Title = "SEGR 5240 REST Example",
+                    Version = "v1",
+                    Contact = new Contact()
+                    {
+                        Name = "Michaeljon Miller",
+                        Email = "michaeljon.miller@outlook.com"
+                    },
+                    Description = "SEGR 5240 REST Example"
+                });
+            });
+                
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // order is important here
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SEGR 5240 REST Example");
+            });
+            
             app.UseMvc();
         }
     }

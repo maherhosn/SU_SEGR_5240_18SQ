@@ -11,6 +11,7 @@ namespace restapi.Controllers
         [Route("~/")]
         [HttpGet]
         [Produces(ContentTypes.Root)]
+        [ProducesResponseType(typeof(IDictionary<string, DocumentLink>), 200)]
         public IDictionary<string, DocumentLink> Get()
         {
             return new Dictionary<string, DocumentLink>()

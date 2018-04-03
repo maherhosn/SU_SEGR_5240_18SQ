@@ -11,6 +11,7 @@ namespace restapi.Controllers
     {
         [HttpGet]
         [Produces(ContentTypes.Timesheets)]
+        [ProducesResponseType(typeof(IEnumerable<Timecard>), 200)]
         public IEnumerable<Timecard> GetAll()
         {
             return Database
@@ -20,6 +21,8 @@ namespace restapi.Controllers
 
         [HttpGet("{id}")]
         [Produces(ContentTypes.Timesheet)]
+        [ProducesResponseType(typeof(Timecard), 200)]
+        [ProducesResponseType(404)]
         public IActionResult GetOne(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -36,6 +39,7 @@ namespace restapi.Controllers
 
         [HttpPost]
         [Produces(ContentTypes.Timesheet)]
+        [ProducesResponseType(typeof(Timecard), 200)]
         public Timecard Create([FromBody] DocumentResource resource)
         {
             var timecard = new Timecard(resource.Resource);
@@ -51,6 +55,8 @@ namespace restapi.Controllers
 
         [HttpGet("{id}/lines")]
         [Produces(ContentTypes.TimesheetLines)]
+        [ProducesResponseType(typeof(IEnumerable<AnnotatedTimecardLine>), 200)]
+        [ProducesResponseType(404)]
         public IActionResult GetLines(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -71,6 +77,9 @@ namespace restapi.Controllers
 
         [HttpPost("{id}/lines")]
         [Produces(ContentTypes.TimesheetLine)]
+        [ProducesResponseType(typeof(AnnotatedTimecardLine), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(InvalidStateError), 409)]
         public IActionResult AddLine(string id, [FromBody] TimecardLine timecardLine)
         {
             Timecard timecard = Database.Find(id);
@@ -94,6 +103,8 @@ namespace restapi.Controllers
         
         [HttpGet("{id}/transitions")]
         [Produces(ContentTypes.Transitions)]
+        [ProducesResponseType(typeof(IEnumerable<Transition>), 200)]
+        [ProducesResponseType(404)]
         public IActionResult GetTransitions(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -110,6 +121,10 @@ namespace restapi.Controllers
 
         [HttpPost("{id}/submittal")]
         [Produces(ContentTypes.Transition)]
+        [ProducesResponseType(typeof(Transition), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(InvalidStateError), 409)]
+        [ProducesResponseType(typeof(EmptyTimecardError), 409)]
         public IActionResult Submit(string id, [FromBody] Submittal submittal)
         {
             Timecard timecard = Database.Find(id);
@@ -138,6 +153,9 @@ namespace restapi.Controllers
 
         [HttpGet("{id}/submittal")]
         [Produces(ContentTypes.Transition)]
+        [ProducesResponseType(typeof(Transition), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(MissingTransitionError), 409)]
         public IActionResult GetSubmittal(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -166,6 +184,10 @@ namespace restapi.Controllers
 
         [HttpPost("{id}/cancellation")]
         [Produces(ContentTypes.Transition)]
+        [ProducesResponseType(typeof(Transition), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(InvalidStateError), 409)]
+        [ProducesResponseType(typeof(EmptyTimecardError), 409)]
         public IActionResult Cancel(string id, [FromBody] Cancellation cancellation)
         {
             Timecard timecard = Database.Find(id);
@@ -189,6 +211,9 @@ namespace restapi.Controllers
 
         [HttpGet("{id}/cancellation")]
         [Produces(ContentTypes.Transition)]
+        [ProducesResponseType(typeof(Transition), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(MissingTransitionError), 409)]
         public IActionResult GetCancellation(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -217,6 +242,10 @@ namespace restapi.Controllers
 
         [HttpPost("{id}/rejection")]
         [Produces(ContentTypes.Transition)]
+        [ProducesResponseType(typeof(Transition), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(InvalidStateError), 409)]
+        [ProducesResponseType(typeof(EmptyTimecardError), 409)]
         public IActionResult Close(string id, [FromBody] Rejection rejection)
         {
             Timecard timecard = Database.Find(id);
@@ -240,6 +269,9 @@ namespace restapi.Controllers
 
         [HttpGet("{id}/rejection")]
         [Produces(ContentTypes.Transition)]
+        [ProducesResponseType(typeof(Transition), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(MissingTransitionError), 409)]
         public IActionResult GetRejection(string id)
         {
             Timecard timecard = Database.Find(id);
@@ -268,6 +300,10 @@ namespace restapi.Controllers
         
         [HttpPost("{id}/approval")]
         [Produces(ContentTypes.Transition)]
+        [ProducesResponseType(typeof(Transition), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(InvalidStateError), 409)]
+        [ProducesResponseType(typeof(EmptyTimecardError), 409)]
         public IActionResult Approve(string id, [FromBody] Approval approval)
         {
             Timecard timecard = Database.Find(id);
@@ -291,6 +327,9 @@ namespace restapi.Controllers
 
         [HttpGet("{id}/approval")]
         [Produces(ContentTypes.Transition)]
+        [ProducesResponseType(typeof(Transition), 200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(MissingTransitionError), 409)]
         public IActionResult GetApproval(string id)
         {
             Timecard timecard = Database.Find(id);
