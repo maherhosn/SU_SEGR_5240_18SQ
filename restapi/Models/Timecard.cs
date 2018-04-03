@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -63,39 +64,46 @@ namespace restapi.Models
             {
                 case TimecardStatus.Draft:
                     links.Add(new ActionLink() {
-                        Method = Method.Get,
-                        Type = ContentTypes.Transitions,
+                        Method = Method.Post,
+                        Type = ContentTypes.Cancellation,
                         Relationship = ActionRelationship.Cancel,
                         Reference = $"/timesheets/{Identity.Value}/cancellation"
                     });
 
                     links.Add(new ActionLink() {
-                        Method = Method.Get,
-                        Type = ContentTypes.Transitions,
+                        Method = Method.Post,
+                        Type = ContentTypes.Submittal,
                         Relationship = ActionRelationship.Submit,
                         Reference = $"/timesheets/{Identity.Value}/submittal"
+                    });
+
+                    links.Add(new ActionLink() {
+                        Method = Method.Post,
+                        Type = ContentTypes.TimesheetLine,
+                        Relationship = ActionRelationship.RecordLine,
+                        Reference = $"/timesheets/{Identity.Value}/lines"
                     });
                 
                     break;
 
                 case TimecardStatus.Submitted:
                     links.Add(new ActionLink() {
-                        Method = Method.Get,
-                        Type = ContentTypes.Transitions,
+                        Method = Method.Post,
+                        Type = ContentTypes.Cancellation,
                         Relationship = ActionRelationship.Cancel,
                         Reference = $"/timesheets/{Identity.Value}/cancellation"
                     });
 
                     links.Add(new ActionLink() {
-                        Method = Method.Get,
-                        Type = ContentTypes.Transitions,
+                        Method = Method.Post,
+                        Type = ContentTypes.Rejection,
                         Relationship = ActionRelationship.Reject,
                         Reference = $"/timesheets/{Identity.Value}/rejection"
                     });
 
                     links.Add(new ActionLink() {
-                        Method = Method.Get,
-                        Type = ContentTypes.Transitions,
+                        Method = Method.Post,
+                        Type = ContentTypes.Approval,
                         Relationship = ActionRelationship.Approve,
                         Reference = $"/timesheets/{Identity.Value}/approval"
                     });
@@ -146,6 +154,15 @@ namespace restapi.Models
             }
 
             return links;
+        }
+
+        public AnnotatedTimecardLine AddLine(TimecardLine timecardLine)
+        {
+            var annotatedLine = new AnnotatedTimecardLine(timecardLine);
+
+            Lines.Add(annotatedLine);
+
+            return annotatedLine;
         }
     }
 }

@@ -19,5 +19,13 @@ namespace restapi.Models
         public const string Transition = "application/com.my-company.my-product.timesheet-transition+json";
     
         public const string Error = "application/com.my-company.my-product.simple-error+json";
+
+        public const string Cancellation = "application/com.my-company.my-product.timesheet-cancellation+json";
+        
+        public const string Submittal = "application/com.my-company.my-product.timesheet-submittal+json";
+        
+        public const string Rejection = "application/com.my-company.my-product.timesheet-rejection+json";
+        
+        public const string Approval = "application/com.my-company.my-product.timesheet-approval+json";
     }
 }

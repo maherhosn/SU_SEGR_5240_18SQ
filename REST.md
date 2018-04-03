@@ -31,7 +31,7 @@ Which results in a GET to the service.
 
 The response includes the correct Content-Type matching what we asked for and what we expect. This indicates the type of thing we passed back to client. Versioning can take place in either the Content-Type name or in a property of the returned object. 
 
-{curl https://localhost:5001/ --insecure --dump-header -}
+{curl http://localhost:5000/ --dump-header -}
 
     HTTP/1.1 200 OK
     Content-Type: application/com.my-company.my-product.root+json; charset=utf-8
@@ -75,7 +75,7 @@ Now, look at the navigation link for the area in which you’re interested and a
 
 We get the root node from the service, notice the Content-Type is what we requested in the initial call.
 
-{curl https://localhost:5001/timesheets --insecure --dump-header -}
+{curl http://localhost:5000/timesheets --dump-header -}
 
     GET /timesheets HTTP/1.1
     X-Requested-With: XMLHttpRequest
@@ -94,10 +94,10 @@ Now, let’s add a timesheet, by convention we accept a POST to the /timesheets 
 Notice in this case that the Content-Type is a generic JSON request. This is not necessary, and instead we could have supplied the type name for the “add timesheet” object template. 
 
 {
-    curl https://localhost:5001/timesheets --insecure \
+    curl http://localhost:5000/timesheets \
         -X POST \
         --header "Content-Type: application/json" \
-        --data '{}' \
+        --data '{ "resource": 1 }' \
         --dump-header -    
 }
 
@@ -116,46 +116,46 @@ By REST rules the service responds with a timesheet object as indicated in the C
     Content-Length: 1104
     
     {
-        "resource": 1,
-        "id": {
-            "area": "dat",
-            "number": "4035447427",
-            "value": "dat-4035447427"
+    "opened": "0001-01-01 00:00:00Z",
+    "resource": 0,
+    "id": {
+        "area": "dat",
+        "number": "1522770959",
+        "value": "dat-1522770959"
+    },
+    "status": "draft",
+    "recId": 0,
+    "recVersion": 0,
+    "uniqueIdentifier": "0278444f-8b1e-474f-aced-50c7957d2b0e",
+    "actions": [
+        {
+            "method": "post",
+            "type": "application/com.my-company.my-product.timesheet-cancellation+json",
+            "rel": "cancel",
+            "href": "/timesheets/dat-1522770959/cancellation"
         },
-        "status": "draft",
-        "opened": "2012-01-12T17:00:03Z",
-        "recId": 0,
-        "recVersion": 0,
-        "uniqueIdentifier": "cae499ca-3c50-4249-9685-88d24c263534",
-        "actions": [
-            {
-                "method": "POST",
-                "type": "application/com.my-company.my-product.timesheet-submittal",
-                "rel": "submit",
-                "href": "/timesheets/dat-4035447427/submittal"
-            },
-            {
-                "method": "POST",
-                "type": "application/com.my-company.my-product.timesheet-cancellation",
-                "rel": "cancel",
-                "href": "/timesheets/dat-4035447427/cancellation"
-            }
-        ],
-        "documentation": [
-            {
-                "method": "GET",
-                "type": "application/com.my-company.my-product.timesheet-transitions",
-                "rel": "transitions",
-                "href": "/timesheets/dat-4035447427/transitions"
-            },
-            {
-                "method": "GET",
-                "type": "application/com.my-company.my-product.timesheet-lines",
-                "rel": "lines",
-                "href": "/timesheets/dat-4035447427/lines"
-            }
-        ],
-        "version": "0.1"
+        {
+            "method": "post",
+            "type": "application/com.my-company.my-product.timesheet-submittal+json",
+            "rel": "submit",
+            "href": "/timesheets/dat-1522770959/submittal"
+        },
+        {
+            "method": "post",
+            "type": "application/com.my-company.my-product.timesheet-line+json",
+            "rel": "recordLine",
+            "href": "/timesheets/dat-1522770959/lines"
+        }
+    ],
+    "documentation": [
+        {
+            "method": "get",
+            "type": "application/com.my-company.my-product.timesheet-transitions+json",
+            "rel": "transitions",
+            "href": "/timesheets/dat-1522770959/transitions"
+        }
+    ],
+    "version": "timecard-0.1"
     }
 
 In addition to the timesheet data there are a number of additional elements that are of interest. In this case there are two arrays, ‘documentation’ and ‘actions’. The ‘documentation’ array contains link elements that tell the client where to look for additional information about this timesheet.
@@ -218,6 +218,26 @@ So, let’s do just that. We’ll create a new request and POST it to the lines 
 
 Which results in the following HTTP request.
 
+{
+    curl http://localhost:5000/timesheets/dat-1522772509/lines \
+        -X POST \
+        --header "Content-Type: application/json" \
+        --data '{ "week": 2, "year": 2018, "day": "wednesday", "hours": 8, "project": "SEGR 5240" }' \
+        --dump-header -
+
+    curl http://localhost:5000/timesheets/dat-1522772509/lines \
+        -X POST \
+        --header "Content-Type: application/json" \
+        --data '{ "week": 2, "year": 2018, "day": "thursday", "hours": 8, "project": "SEGR 5240" }' \
+        --dump-header -
+
+    curl http://localhost:5000/timesheets/dat-1522772509/lines \
+        -X POST \
+        --header "Content-Type: application/json" \
+        --data '{ "week": 2, "year": 2018, "day": "friday", "hours": 8, "project": "SEGR 5240" }' \
+        --dump-header -
+}
+
     POST /timesheets/dat-4035447427/lines HTTP/1.1
     Accept: application/com.my-company.my-product.timesheet-line+json
     Content-Type: application/json
@@ -235,24 +255,25 @@ Which results in the following HTTP request.
 In this case we’ve asked for the annotated timesheet line as indicated by the Accept header that we’ve added. The service responds with our newly-added timesheet line.
 
     HTTP/1.1 200 OK
-    Content-Type: application/com.my-company.my-product.timesheet+json
-    Server: my-company-IIS/7.5
-    Content-Length: 363
-    
+    Date: Tue, 03 Apr 2018 16:26:12 GMT
+    Content-Type: application/com.my-company.my-product.timesheet-line+json; charset=utf-8
+    Transfer-Encoding: chunked
+
     {
-        "week": 2,
-        "year": 2012,
-        "day": "thursday",
-        "hours": 8.0,
-        "project": "project",
-        "recorded": "2012-01-12T17:18:46Z",
+        "recorded": "2018-04-03 16:26:13Z",
+        "workDate": "2018-01-01 00:00:00Z",
         "lineNumber": 0.0,
         "recId": 0,
         "recVersion": 0,
-        "uniqueIdentifier": "5ecfb4f8-02c1-414c-b8a7-b3cfe1a85190",
-        "periodFrom": "2012-01-09T00:00:00Z",
-        "periodTo": "2012-01-15T00:00:00Z",
-        "version": "line-0.1"
+        "uniqueIdentifier": "38ecd809-9f08-4c6e-87d6-ac03f0881405",
+        "periodFrom": "0001-01-01 00:00:00Z",
+        "periodTo": "0001-01-01 00:00:00Z",
+        "version": "line-0.1",
+        "week": 1,
+        "year": 2018,
+        "day": "monday",
+        "hours": 8.0,
+        "project": "SEGR 5240"
     }
 
 Now, let’s say we want to submit this timesheet for approval. To do that we look at the ‘action’ link collection to find the ‘submit’ relationship and it’s corresponding href value. If we look at the collection

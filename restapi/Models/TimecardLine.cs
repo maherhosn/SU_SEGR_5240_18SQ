@@ -1,5 +1,6 @@
-using Newtonsoft.Json;
 using System;
+using System.Globalization;
+using Newtonsoft.Json;
 
 namespace restapi.Models
 {
@@ -18,6 +19,10 @@ namespace restapi.Models
 
     public class AnnotatedTimecardLine : TimecardLine
     {
+        private DateTime workDate;
+        private DateTime? periodFrom;
+        private DateTime? periodTo;
+
         public AnnotatedTimecardLine(TimecardLine line)
         {
             Week = line.Week;
@@ -27,8 +32,13 @@ namespace restapi.Models
             Project = line.Project;
 
             Recorded = DateTime.UtcNow;
+            workDate = FirstDateOfWeekISO8601(line.Year, line.Week).AddDays((int)line.Day - 1);
+            UniqueIdentifier = Guid.NewGuid();
         }
+
         public DateTime Recorded { get; set; }
+
+        public string WorkDate { get => workDate.ToString("yyyy-MM-dd"); }
 
         public float LineNumber { get; set; }
 
@@ -40,10 +50,30 @@ namespace restapi.Models
 
         public Guid UniqueIdentifier { get; set; }
 
-        public DateTime PeriodFrom { get; set; }
+        public string PeriodFrom { get => periodFrom?.ToString("yyyy-MM-dd"); }
 
-        public DateTime PeriodTo { get; set; }
+        public string PeriodTo { get => periodTo?.ToString("yyyy-MM-dd"); }
 
         public string Version { get; set; } = "line-0.1";
+
+        private static DateTime FirstDateOfWeekISO8601(int year, int weekOfYear)
+        {
+            var jan1 = new DateTime(year, 1, 1);
+            var daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
+
+            var firstThursday = jan1.AddDays(daysOffset);
+            var cal = CultureInfo.CurrentCulture.Calendar;
+            var firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+            var weekNum = weekOfYear;
+            if (firstWeek <= 1)
+            {
+                weekNum -= 1;
+            }
+
+            var result = firstThursday.AddDays(weekNum * 7);
+
+            return result.AddDays(-3);
+        }        
     }
 }

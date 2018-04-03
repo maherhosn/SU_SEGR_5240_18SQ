@@ -7,8 +7,7 @@ using restapi.Models;
 namespace restapi.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
-    public class TimesheetsController : ControllerBase
+    public class TimesheetsController : Controller
     {
         [HttpGet]
         [Produces(ContentTypes.Timesheets)]
@@ -58,7 +57,11 @@ namespace restapi.Controllers
 
             if (timecard != null)
             {
-                return Ok(timecard.Lines);
+                var lines = timecard.Lines
+                    .OrderBy(l => l.WorkDate)
+                    .ThenBy(l => l.Recorded);
+
+                return Ok(lines);
             }
             else
             {
@@ -76,12 +79,10 @@ namespace restapi.Controllers
             {
                 if (timecard.Status != TimecardStatus.Draft)
                 {
-                    return StatusCode(409);
+                    return StatusCode(409, new InvalidStateError() { });
                 }
 
-                var annotatedLine = new AnnotatedTimecardLine(timecardLine);
-
-                timecard.Lines.Add(annotatedLine);
+                var annotatedLine = timecard.AddLine(timecardLine);
 
                 return Ok(annotatedLine);
             }
@@ -117,7 +118,12 @@ namespace restapi.Controllers
             {
                 if (timecard.Status != TimecardStatus.Draft)
                 {
-                    return StatusCode(409);
+                    return StatusCode(409, new InvalidStateError() { });
+                }
+
+                if (timecard.Lines.Count < 1)
+                {
+                    return StatusCode(409, new EmptyTimecardError() { });
                 }
                 
                 var transition = new Transition(submittal, TimecardStatus.Submitted);
@@ -149,7 +155,7 @@ namespace restapi.Controllers
                 }
                 else 
                 {
-                    return StatusCode(409);
+                    return StatusCode(409, new MissingTransitionError() { });
                 }
             }
             else
@@ -168,7 +174,7 @@ namespace restapi.Controllers
             {
                 if (timecard.Status != TimecardStatus.Draft && timecard.Status != TimecardStatus.Submitted)
                 {
-                    return StatusCode(409);
+                    return StatusCode(409, new InvalidStateError() { });
                 }
                 
                 var transition = new Transition(cancellation, TimecardStatus.Cancelled);
@@ -200,7 +206,7 @@ namespace restapi.Controllers
                 }
                 else 
                 {
-                    return StatusCode(409);
+                    return StatusCode(409, new MissingTransitionError() { });
                 }
             }
             else
@@ -219,7 +225,7 @@ namespace restapi.Controllers
             {
                 if (timecard.Status != TimecardStatus.Submitted)
                 {
-                    return StatusCode(409);
+                    return StatusCode(409, new InvalidStateError() { });
                 }
                 
                 var transition = new Transition(rejection, TimecardStatus.Rejected);
@@ -251,7 +257,7 @@ namespace restapi.Controllers
                 }
                 else 
                 {
-                    return StatusCode(409);
+                    return StatusCode(409, new MissingTransitionError() { });
                 }
             }
             else
@@ -270,7 +276,7 @@ namespace restapi.Controllers
             {
                 if (timecard.Status != TimecardStatus.Submitted)
                 {
-                    return StatusCode(409);
+                    return StatusCode(409, new InvalidStateError() { });
                 }
                 
                 var transition = new Transition(approval, TimecardStatus.Approved);
@@ -302,7 +308,7 @@ namespace restapi.Controllers
                 }
                 else 
                 {
-                    return StatusCode(409);
+                    return StatusCode(409, new MissingTransitionError() { });
                 }
             }
             else

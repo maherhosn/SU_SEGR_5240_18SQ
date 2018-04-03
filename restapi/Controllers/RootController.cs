@@ -5,8 +5,7 @@ using restapi.Models;
 
 namespace restapi.Controllers
 {
-    [ApiController]
-    public class RootController : ControllerBase
+    public class RootController : Controller
     {
         // GET api/values
         [Route("~/")]
