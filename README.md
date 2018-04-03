@@ -2,7 +2,7 @@
 
 **Schedule**: Tuesdays in PIGT 107, 6:00pm to 8:40pm<br/>
 **Instructor**: Michaeljon Miller (michaeljon.miller@outlook.com)<br/>
-**Office hours**: Thursday before class or by appointment<br/>
+**Office hours**: Tuesday before class or by appointment<br/>
 **Course materials**: https://github.com/michaeljon/SU_SEGR_5240_18SQ
 
 ## Catalog Description
