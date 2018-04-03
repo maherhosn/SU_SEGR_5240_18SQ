@@ -19,6 +19,7 @@ namespace restapi
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseKestrel(opt => opt.AddServerHeader = false)
                 .UseStartup<Startup>();
     }
 }

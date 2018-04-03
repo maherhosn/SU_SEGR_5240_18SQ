@@ -1,25 +1,36 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace restapi.Models
 {
     public class Timecard
     {
-        public Timecard()
+        public Timecard(int resource)
         {
             UniqueIdentifier = Guid.NewGuid();
             Identity = new TimecardIdentity();
             Lines = new List<AnnotatedTimecardLine>();
-            Transitions = new List<Transition>();
+            Transitions = new List<Transition> { 
+                new Transition(new Entered() { Resource = resource }) 
+            };
         }
 
-        public int Resource { get; set; }
+        public int Resource { get; private set; }
         
         [JsonProperty("id")]
-        public TimecardIdentity Identity { get; set; }
+        public TimecardIdentity Identity { get; private set; }
 
-        public TimecardStatus Status { get; set; }
+        public TimecardStatus Status { 
+            get 
+            { 
+                return Transitions
+                    .OrderByDescending(t => t.OccurredAt)
+                    .First()
+                    .TransitionedTo;
+            } 
+        }
 
         public DateTime Opened;
 

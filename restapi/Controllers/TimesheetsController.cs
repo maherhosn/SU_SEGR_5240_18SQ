@@ -14,7 +14,9 @@ namespace restapi.Controllers
         [Produces(ContentTypes.Timesheets)]
         public IEnumerable<Timecard> GetAll()
         {
-            return Database.All;
+            return Database
+                .All
+                .OrderBy(t => t.Opened);
         }
 
         [HttpGet("{id}")]
@@ -37,15 +39,7 @@ namespace restapi.Controllers
         [Produces(ContentTypes.Timesheet)]
         public Timecard Create([FromBody] DocumentResource resource)
         {
-            var timecard = new Timecard()
-            {
-                Resource = resource.Resource,
-                Identity = new TimecardIdentity(),
-                Status = TimecardStatus.Draft,
-
-                Opened = DateTime.UtcNow,
-                UniqueIdentifier = Guid.NewGuid()
-            };
+            var timecard = new Timecard(resource.Resource);
 
             var entered = new Entered() { Resource = resource.Resource };
 
