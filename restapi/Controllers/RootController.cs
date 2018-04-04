@@ -11,13 +11,13 @@ namespace restapi.Controllers
         [Route("~/")]
         [HttpGet]
         [Produces(ContentTypes.Root)]
-        [ProducesResponseType(typeof(IDictionary<string, DocumentLink>), 200)]
-        public IDictionary<string, DocumentLink> Get()
+        [ProducesResponseType(typeof(IDictionary<ApplicationRelationship, DocumentLink>), 200)]
+        public IDictionary<ApplicationRelationship, DocumentLink> Get()
         {
-            return new Dictionary<string, DocumentLink>()
+            return new Dictionary<ApplicationRelationship, DocumentLink>()
             {  
                 { 
-                    "timesheets", new DocumentLink() 
+                    ApplicationRelationship.Timesheets, new DocumentLink() 
                     { 
                         Method = Method.Get,
                         Type = ContentTypes.Timesheets,
