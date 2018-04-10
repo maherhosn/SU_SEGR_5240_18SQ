@@ -36,6 +36,32 @@ namespace restapi.Controllers
                 return NotFound();
             }
         }
+        
+        [HttpDelete("{id}")]
+        [Produces(ContentTypes.Timesheet)]
+        [ProducesResponseType(typeof(Timecard), 200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteEntry(string id)
+        {
+            Timecard timecard = Database.Find(id);
+
+            if (timecard != null) 
+            {
+                if(timecard.Status == TimecardStatus.Draft || timecard.Status == TimecardStatus.Cancelled)
+                {
+                    Database.Del(timecard);
+                    return Ok(timecard);
+                }
+                else
+                {
+                    return StatusCode(400, new BadRequestResult() { });
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
         [HttpPost]
         [Produces(ContentTypes.Timesheet)]
