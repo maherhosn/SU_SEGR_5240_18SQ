@@ -159,6 +159,40 @@ namespace restapi.Controllers
                 }
             }
         }
+
+        [HttpPatch("{id}/lines/{lineId}")]
+        [Produces(ContentTypes.TimesheetLines)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(InvalidStateError), 409)]
+        public IActionResult OverWriteALine(string id, string lineUniqueId, Nullable<int> week = null, Nullable<int> year = null, Nullable<DayOfWeek> day = null, Nullable<float> hours = null, string project = null)
+        {
+            Timecard timecard = Database.Find(id);
+
+            if (timecard == null)
+            {
+                return NotFound();
+            }
+            
+            else
+            {
+                if (timecard.Status != TimecardStatus.Draft)
+                {
+                    return StatusCode(409, new InvalidStateError() { });
+                }
+
+                var lineInTimeCard = timecard.FindALine(new Guid(lineUniqueId));
+
+                if (lineInTimeCard == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                   lineInTimeCard.EditLine(week, year, day, hours, project);
+                   return Ok(lineInTimeCard);
+                }
+           }
+        }
         
         [HttpGet("{id}/transitions")]
         [Produces(ContentTypes.Transitions)]

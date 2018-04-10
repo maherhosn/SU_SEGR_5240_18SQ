@@ -86,6 +86,37 @@ namespace restapi.Models
 
             Recorded = DateTime.UtcNow;
             workDate = FirstDateOfWeekISO8601(lineId.Year, lineId.Week).AddDays((int)lineId.Day - 1);
-        }        
+        }
+
+        public void EditLine(Nullable<int> week, Nullable<int> year, Nullable<DayOfWeek> day, Nullable<float> hours, string project)
+       {
+           if (week.HasValue)
+           {
+                this.Week = week.Value;
+           }
+
+           if (year.HasValue)
+           {
+                this.Year = year.Value;
+           }
+
+           if (day.HasValue)
+           {
+                this.Day = day.Value;
+           }
+
+           if (hours.HasValue)
+           {
+                this.Hours = hours.Value;
+           }
+
+           if (project != null)
+           {
+               this.Project = project;
+           }
+
+           Recorded = DateTime.UtcNow;
+           workDate = FirstDateOfWeekISO8601(this.Year, this.Week).AddDays((int)this.Day - 1);
+       }        
     }
 }
