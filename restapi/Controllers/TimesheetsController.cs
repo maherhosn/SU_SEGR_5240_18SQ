@@ -218,9 +218,15 @@ namespace restapi.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(typeof(InvalidStateError), 409)]
         [ProducesResponseType(typeof(EmptyTimecardError), 409)]
+        [ProducesResponseType(typeof(InvalidOperationException), 409)]
         public IActionResult Submit(string id, [FromBody] Submittal submittal)
         {
             Timecard timecard = Database.Find(id);
+
+            if(submittal.Resource != timecard.Resource)
+            {
+                return StatusCode(409, new InvalidOperationException("The Resource entered does not match the one in the timecard.") { });
+            }
 
             if (timecard != null)
             {
