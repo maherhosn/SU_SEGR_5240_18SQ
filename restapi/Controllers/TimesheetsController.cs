@@ -126,6 +126,39 @@ namespace restapi.Controllers
                 return NotFound();
             }
         }
+
+       [HttpPost("{id}/lines/{lineId}")]
+       [Produces(ContentTypes.TimesheetLines)]
+       [ProducesResponseType(typeof(InvalidStateError), 409)]
+       [ProducesResponseType(404)]    
+        public IActionResult ReplaceALine(string id, string lineUniqueId, [FromBody] TimecardLine timecardLine)
+        {
+           Timecard timecard = Database.Find(id);
+
+           if (timecard == null)
+            {
+                return NotFound();
+            }            
+            else
+            {
+                if (timecard.Status != TimecardStatus.Draft)
+                {
+                    return StatusCode(409, new InvalidStateError() { });
+                }
+
+                var lineInTimeCard = timecard.FindALine(new Guid(lineUniqueId));
+              
+                if (lineInTimeCard == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    lineInTimeCard.ReplaceALine(timecardLine);
+                    return Ok(lineInTimeCard);
+                }
+            }
+        }
         
         [HttpGet("{id}/transitions")]
         [Produces(ContentTypes.Transitions)]

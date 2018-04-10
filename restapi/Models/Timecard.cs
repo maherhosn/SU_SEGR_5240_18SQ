@@ -164,5 +164,16 @@ namespace restapi.Models
 
             return annotatedLine;
         }
+
+        public AnnotatedTimecardLine FindALine(Guid lineId)
+        {
+            foreach(AnnotatedTimecardLine line in Lines)
+            {
+                if(lineId.Equals(line.UniqueIdentifier))
+                return line;
+            }
+            
+            return null;
+        }
     }
 }

@@ -74,6 +74,18 @@ namespace restapi.Models
             var result = firstThursday.AddDays(weekNum * 7);
 
             return result.AddDays(-3);
+        }
+
+        public void ReplaceALine(TimecardLine lineId)
+        {
+            Week = lineId.Week;
+            Year = lineId.Year;
+            Day = lineId.Day;
+            Hours = lineId.Hours;
+            Project = lineId.Project;
+
+            Recorded = DateTime.UtcNow;
+            workDate = FirstDateOfWeekISO8601(lineId.Year, lineId.Week).AddDays((int)lineId.Day - 1);
         }        
     }
 }
