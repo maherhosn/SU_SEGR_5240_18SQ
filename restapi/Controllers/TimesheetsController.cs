@@ -403,9 +403,15 @@ namespace restapi.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(typeof(InvalidStateError), 409)]
         [ProducesResponseType(typeof(EmptyTimecardError), 409)]
+        [ProducesResponseType(typeof(InvalidOperationException), 409)]
         public IActionResult Approve(string id, [FromBody] Approval approval)
         {
             Timecard timecard = Database.Find(id);
+
+            if (approval.Resource == timecard.Resource)
+            {
+                return StatusCode(409, new InvalidOperationException("The Approver Resource should not be the same as the TimeCard Resource") { });
+            }
 
             if (timecard != null)
             {
